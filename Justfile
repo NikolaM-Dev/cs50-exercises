@@ -12,9 +12,9 @@ init:
 build:
     gcc main.c -lcs50 -o main
 
-# Build and run the `main` binary
-run: build
-    ./main
+# Build and run the `main` binary with zero or more arguments
+run *ARGS: build
+    ./main {{ ARGS }}
 
 # Hot reaload listening for change in `*.c` files
 hot_reload:
