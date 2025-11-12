@@ -1,2 +1,6 @@
 # binaries
 main
+
+# debugging
+DAP *
+\[dap-repl-*
