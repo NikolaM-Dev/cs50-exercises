@@ -30,11 +30,11 @@
       ]
     },
     {
-      "name": "runoff",
+      "name": "vote",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/main",
-      "args": ["Alice", "Bob", "Charlie", "Dave"],
+      "args": ["a", "b", "c"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],
