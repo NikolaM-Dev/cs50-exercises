@@ -19,3 +19,15 @@ run *ARGS: build
 # Hot reaload listening for change in `*.c` files
 hot_reload:
     ls *.c | entr -r sh -c 'clear; gcc -lcs50 -o main *.c && ./main'
+
+# Check memory usage
+val *ARGS: build
+    rm -f ./output.wav
+    valgrind ./main {{ ARGS }}
+
+# Test `volume` exercise
+volume: build
+    clear
+    rm -f ./output.wav
+    ./main input.wav output.wav 2
+    mpv ./output.wav
