@@ -1,6 +1,9 @@
 # binaries
 main
 
+# audio
+output.wav
+
 # debugging
 DAP *
 \[dap-repl-*
