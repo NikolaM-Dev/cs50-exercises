@@ -1,0 +1,15 @@
+// [Schema](https://code.visualstudio.com/docs/reference/tasks-appendix)
+// [Variables](https://code.visualstudio.com/docs/reference/variables-reference)
+// [Examples](https://code.visualstudio.com/docs/debugtest/tasks#_task-autodetection)
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build",
+      "type": "shell",
+      "group": "build",
+      "command": "just",
+      "args": ["build"]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+// [Variables](https://code.visualstudio.com/docs/reference/variables-reference)
+// [Examples](https://code.visualstudio.com/docs/debugtest/debugging-configuration)
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch build (codelldb)",
+      "type": "codelldb",
+      "request": "launch",
+
+      "args": ["-b", "./images/tower.bmp", "out.bmp"],
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceFolder}/filter",
+
+      "preLaunchTask": "Build"
+    }
+  ],
+
+  // [Compund](https://code.visualstudio.com/docs/debugtest/debugging-configuration#_compound-launch-configurations)
+  "compounds": []
+}
