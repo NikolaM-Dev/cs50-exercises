@@ -28,5 +28,3 @@
 - [ ] How to use `xxd` to see binaries in hexadecimal.
 - [ ] How to use the `%x` to print hexadecimal.
 - [ ] How to cast in `clang`.
-- [ ] How to handle `fread` errors in `clang`.
-- [ ]
