@@ -1,0 +1,32 @@
+# List avalible recipes
+default:
+    just --list
+
+# Build the `src` into the `filter` binary
+build:
+    clang -ggdb3 -gdwarf-4 -O0 -Qunused-arguments -std=c11 -Wall -Werror -Wextra -Wno-gnu-folding-constant -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wshadow -lm -o filter filter.c helpers.c
+
+# Generic test that recibe variadic args
+test *ARGS: build
+    ./filter {{ ARGS }}
+    feh out.bmp
+
+# Filter a bmp image using the `grayscale` filter
+grayscale: build
+    ./filter -g ./images/yard.bmp out.bmp
+    feh out.bmp
+
+# Filter a bmp image using the `reflect` filter
+reflect: build
+    ./filter -r ./images/stadium.bmp out.bmp
+    feh out.bmp
+
+# Filter a bmp image using the `blur` filter
+blur: build
+    ./filter -b ./images/courtyard.bmp out.bmp
+    feh out.bmp
+
+# Filter a bmp image using the `sepia` filter
+edges: build
+    ./filter -e ./images/courtyard.bmp out.bmp
+    feh out.bmp
