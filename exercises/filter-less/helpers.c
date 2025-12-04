@@ -88,27 +88,27 @@ void reflect(int height, int width, RGBTRIPLE image[height][width]) {
 // Blur image
 void blur(int height, int width, RGBTRIPLE image[height][width]) {
   RGBTRIPLE original[height][width];
-  memcpy(&original, image, sizeof original);
+  memcpy(original, image, sizeof original);
 
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
-      RGBTRIPLE pixel = {0, 0, 0};
-      int pixel_count = 0;
+      int red_sum = 0, green_sum = 0, blue_sum = 0;
+      int count = 0;
 
-      for (int k = i - 1, row_limit = k + 3; k < row_limit; k++) {
-        for (int h = j - 1, col_limit = h + 3; h < col_limit; h++) {
-          if (k >= 0 && k < height && h >= 0 && h < width) {
-            pixel.rgbtRed += original[k][h].rgbtRed;
-            pixel.rgbtGreen += original[k][h].rgbtGreen;
-            pixel.rgbtBlue += original[k][h].rgbtBlue;
-            pixel_count++;
+      for (int h = i - 1, row_limit = h + 3; h < row_limit; h++) {
+        for (int k = j - 1, col_limit = k + 3; k < col_limit; k++) {
+          if (h >= 0 && k >= 0 && h < height && k < width) {
+            red_sum += original[h][k].rgbtRed;
+            green_sum += original[h][k].rgbtGreen;
+            blue_sum += original[h][k].rgbtBlue;
+            count++;
           }
         }
       }
 
-      image[i][j].rgbtRed = round((float)(pixel.rgbtRed) / pixel_count);
-      image[i][j].rgbtGreen = round((float)(pixel.rgbtGreen) / pixel_count);
-      image[i][j].rgbtBlue = round((float)(pixel.rgbtBlue) / pixel_count);
+      image[i][j].rgbtRed = round((float)red_sum / count);
+      image[i][j].rgbtGreen = round((float)green_sum / count);
+      image[i][j].rgbtBlue = round((float)blue_sum / count);
     }
   }
 }
