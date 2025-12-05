@@ -1,0 +1,23 @@
+# List avalible recipes
+default:
+    just --list
+
+# Build the source code from `recover.c`
+build: clean
+    gcc recover.c -o recover.out
+
+# Clean the remaning `.jpg` files
+clean:
+    rm -f *.jpg
+
+# Runs the `recover` binary with dynamic args
+run *ARGS: build
+    ./recover.out {{ ARGS }}
+
+# Tests the `recover` binary with `card.now`
+test: build
+    ./recover.out ./card.raw
+
+# Check memory using `valgrind`
+memcheck: build
+    valgrind --leak-check=full --show-leak-kinds=all -s ./recover.out ./card.raw

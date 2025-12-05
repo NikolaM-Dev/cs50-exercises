@@ -1,0 +1,8 @@
+# Executables
+*.out
+
+# Output
+*.jpg
+
+# Debug
+vgcore.*
