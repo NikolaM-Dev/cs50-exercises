@@ -1,0 +1,19 @@
+# List avalible recipes
+default:
+    just --list
+
+# Build the source code from `main.c`
+build:
+    gcc main.c linked-list.c -o main.out
+
+# Runs the `main` binary with dynamic args
+run *ARGS: build
+    ./main.out {{ ARGS }}
+
+# Hot reaload listening for change in `*.c` files
+hot_reload:
+    watchexec -e .c 'clear; just run'
+
+# Check memory using `valgrind`
+memcheck: build
+    valgrind --leak-check=full --show-leak-kinds=all -s ./main.out
