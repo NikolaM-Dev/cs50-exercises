@@ -1,0 +1,24 @@
+# List avalible recipes
+default:
+    just --list
+
+# Builds the main binary with development and debugging purposes
+build:
+    gcc -ggdb -Wall -Wextra -pedantic inheritance.c -o inheritance.out
+
+# Runs the main binary
+run: build
+    ./inheritance.out
+
+# Runs the main binary every time a .c file is modified
+hot_reloading: build
+    watchexec -e .c 'clear; just run'
+
+# Runs `valgrind` to see memory issues
+memcheck: build
+    clear
+    valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s ./inheritance.out
+
+# Memory check Hot Reloading
+hot_memcheck:
+    watchexec -e .c 'clear; just memcheck'
