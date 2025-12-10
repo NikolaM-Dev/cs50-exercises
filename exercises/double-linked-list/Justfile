@@ -1,0 +1,28 @@
+# List avalible recipes
+default:
+    just --list
+
+# Keeps the project clean
+clean:
+    rm -f *vgcore.*
+
+# Build the source code from `main.c`
+build: clean
+    gcc main.c double-linked-list.c -o main.out
+
+# Runs the `main` binary with dynamic args
+run *ARGS: build
+    ./main.out {{ ARGS }}
+
+# Hot Reloading listening for change in `*.c` files
+hot_reload:
+    watchexec -e .c 'clear; just run'
+
+# Check memory using `valgrind`
+memcheck: build
+    clear
+    valgrind --leak-check=full --show-leak-kinds=all -s ./main.out
+
+# Memory check Hot Reloading
+hot_memcheck:
+    watchexec -e .c 'clear; just memcheck'
