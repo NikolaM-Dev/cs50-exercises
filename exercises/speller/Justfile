@@ -1,0 +1,34 @@
+# List avalible recipes
+default:
+    just --list
+
+# Keep clean the project
+clean:
+    rm -rf vgcore.*
+
+# Builds the source code with it's depdendencies
+build: clean
+    clang -ggdb3 -gdwarf-4 -O0 -Qunused-arguments -std=c11 -Wall -Werror -Wextra -Wno-gnu-folding-constant -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wshadow -c -o speller.o speller.c
+    clang -ggdb3 -gdwarf-4 -O0 -Qunused-arguments -std=c11 -Wall -Werror -Wextra -Wno-gnu-folding-constant -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wshadow -c -o dictionary.o dictionary.c
+    clang -ggdb3 -gdwarf-4 -O0 -Qunused-arguments -std=c11 -Wall -Werror -Wextra -Wno-gnu-folding-constant -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wshadow -o speller.out speller.o dictionary.o -lm
+
+# Runs the default test
+test: build
+    ./speller.out ./texts/lalaland.txt
+
+# Runs `just test` every time a c file is modified
+hot_reload:
+    watchexec -e .c 'clear; just test'
+
+# Runs `valgrind` to see memory issues
+memcheck: build
+    clear
+    valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s ./speller.out ./texts/lalaland.txt
+
+# Memory check Hot Reloading
+hot_memcheck:
+    watchexec -e .c 'clear; just memcheck'
+
+# Runs `speller50` (Harvard CS50) version to compare with my own implementation
+reference:
+    ./speller50 ./texts/lalaland.txt
