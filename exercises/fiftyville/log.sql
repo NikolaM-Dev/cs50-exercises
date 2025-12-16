@@ -1,0 +1,299 @@
+-- Keep a log of any SQL queries you execute as you solve the mystery.
+-- 1. See the schemas
+-- .schema
+--
+-- 2. See the phone_calls rows
+-- SELECT
+--     *
+-- FROM
+--     phone_calls;
+--
+-- 3. See the people rows 27.dbout
+-- SELECT
+--     *
+-- FROM
+--     people;
+--
+-- 4. Make a diagram
+-- 5. See the crime_scene_reports rows 48.dbout
+-- SELECT
+--     *
+-- FROM
+--     crime_scene_reports;
+-- 6. See the interviews 53.dbout
+-- SELECT
+--     *
+-- FROM
+--     interviews;
+--
+-- NOTE: Who the thief is,
+-- NOTE: What city the thief escaped to, and
+-- NOTE: Who the thief’s accomplice is who helped them escape
+-- NOTE: All you know is that the theft took place on July 28, 2025 and that it took
+-- NOTE: place ON Humphrey Street
+-- 7. Review crime_scene_reports based data 64.dbout
+-- SELECT
+--     *
+-- FROM
+--     crime_scene_reports
+-- WHERE
+--     "month" = 7
+--     AND "day" = 28
+--     AND street = 'Humphrey Street';
+-- NOTE: Theft of the CS50 duck took place at 10:15am at the Humphrey Street
+-- bakery. Interviews were conducted today with three witnesses who were present
+-- at the time – each of their interview transcripts mentions the bakery.
+-- (2025-7-28)
+-- NOTE: La people arrojo basura de forma extrana a las 16:36 pero SIN testigos
+--
+-- 8. See interviews that include "bakery" 214
+-- SELECT
+--     p.*,
+--     itv.transcript
+-- FROM
+--     people AS p
+--     JOIN interviews AS itv ON itv.name = p.name
+-- WHERE
+--     itv."year" = 2025
+--     AND itv."month" = 7
+--     AND itv."day" = 28
+--     AND itv.transcript LIKE '%bakery%';
+-- NOTE: Ruth Search between 10:15 and 10:25 vio al ladron irse en su coche
+-- 9. Follow the hit FROM Ruth 229
+-- SELECT
+--     p.*,
+--     bksl.*
+-- FROM
+--     people AS p
+--     JOIN bakery_security_logs AS bksl ON bksl.license_plate = p.license_plate
+-- WHERE
+--     bksl."year" = 2025
+--     AND bksl."month" = 7
+--     AND bksl."day" = 28
+--     AND bksl."hour" = 10
+--     AND bksl."minute" BETWEEN 15 AND 25
+--     AND p.passport_number IS NOT NULL;
+-- NOTE: Thief Suspects
+-- id      name     phone_number    passport_number  license_plate  id   year  month  day  hour  minute  activity  license_plate
+-- ------  -------  --------------  ---------------  -------------  ---  ----  -----  ---  ----  ------  --------  -------------
+-- 221103  Vanessa  (725) 555-4692  2963008352       5P2BI95        260  2025  7      28   10    16      exit      5P2BI95
+-- 686048  Bruce    (367) 555-5533  5773159633       94KL13X        261  2025  7      28   10    18      exit      94KL13X
+-- 243696  Barry    (301) 555-4174  7526138472       6P58WS2        262  2025  7      28   10    18      exit      6P58WS2
+-- 467400  Luca     (389) 555-5198  8496433585       4328GD8        263  2025  7      28   10    19      exit      4328GD8
+-- 398010  Sofia    (130) 555-0289  1695452385       G412CB7        264  2025  7      28   10    20      exit      G412CB7
+-- 396669  Iman     (829) 555-5269  7049073643       L93JTIZ        265  2025  7      28   10    21      exit      L93JTIZ
+-- 514354  Diana    (770) 555-1861  3592750733       322W7JE        266  2025  7      28   10    23      exit      322W7JE
+-- 560886  Kelsey   (499) 555-9472  8294398571       0NTHK55        267  2025  7      28   10    23      exit      0NTHK55
+--
+-- NOTE: Raymond, El ladron llamo a alguien y duro menos de un 1min despues del robo. Le
+-- pidio a su complice que comprara un vuelo fuera de Fiftyville lo mas temprano
+-- posible manana (29). Y el ladron mando al complice a comprar el ticket.
+-- 10. See phone_calls rows, specifically the duration 274
+-- SELECT
+--     *
+-- FROM
+--     phone_calls;
+-- 11. Combine the info FROM ruth AND Raymond 278
+-- SELECT
+--     p.*,
+--     pc.caller,
+--     pc.receiver
+-- FROM
+--     people AS p
+--     JOIN phone_calls AS pc ON pc.caller = p.phone_number
+-- WHERE
+--     pc."year" = 2025
+--     AND pc."month" = 7
+--     AND pc."day" = 28
+--     AND pc.duration < 60
+--     AND pc.caller IN (
+--         SELECT
+--             p.phone_number
+--         FROM
+--             people AS p
+--             JOIN bakery_security_logs AS bksl ON bksl.license_plate = p.license_plate
+--         WHERE
+--             bksl."year" = 2025
+--             AND bksl."month" = 7
+--             AND bksl."day" = 28
+--             AND bksl."hour" = 10
+--             AND bksl."minute" BETWEEN 15 AND 25
+--             AND p.passport_number IS NOT NULL
+--     );
+-- NOTE: Thief Suspects AND complices Suspects
+-- id      name    phone_number    passport_number  license_plate  caller          receiver
+-- ------  ------  --------------  ---------------  -------------  --------------  --------------
+-- 398010  Sofia   (130) 555-0289  1695452385       G412CB7        (130) 555-0289  (996) 555-8899
+-- 560886  Kelsey  (499) 555-9472  8294398571       0NTHK55        (499) 555-9472  (892) 555-8872
+-- 560886  Kelsey  (499) 555-9472  8294398571       0NTHK55        (499) 555-9472  (717) 555-1342
+-- 686048  Bruce   (367) 555-5533  5773159633       94KL13X        (367) 555-5533  (375) 555-8161
+-- 514354  Diana   (770) 555-1861  3592750733       322W7JE        (770) 555-1861  (725) 555-3243
+--
+-- NOTE: Eugene cree reconocerlo, lo vio en la manana antes de venir a la
+-- panaderia de Emma en el cajero de la calle Leggett y vio al ladron sacando
+-- dinero, btw Eugene tiene passport_number
+-- 12. View atm_transactions structure
+-- SELECT
+--     *
+-- FROM
+--     atm_transactions;
+-- 13. Combine the info from the witnesses 315
+-- SELECT
+--     p.*
+-- FROM
+--     people AS p
+--     JOIN bank_accounts AS ba ON ba.person_id = p.id
+--     JOIN atm_transactions AS atmt ON atmt.account_number = ba.account_number
+-- WHERE
+--     atmt."year" = 2025
+--     AND atmt."month" = 7
+--     AND atmt."day" = 28
+--     AND atmt.transaction_type = 'withdraw'
+--     AND atmt.atm_location = 'Leggett Street'
+--     AND p.phone_number IN (
+--         SELECT
+--             pc.caller
+--         FROM
+--             people AS p
+--             JOIN phone_calls AS pc ON pc.caller = p.phone_number
+--         WHERE
+--             pc."year" = 2025
+--             AND pc."month" = 7
+--             AND pc."day" = 28
+--             AND pc.duration < 60
+--             AND pc.caller IN (
+--                 SELECT
+--                     p.phone_number
+--                 FROM
+--                     people AS p
+--                     JOIN bakery_security_logs AS bksl ON bksl.license_plate = p.license_plate
+--                 WHERE
+--                     bksl."year" = 2025
+--                     AND bksl."month" = 7
+--                     AND bksl."day" = 28
+--                     AND bksl."hour" = 10
+--                     AND bksl."minute" BETWEEN 15 AND 25
+--                     AND p.passport_number IS NOT NULL
+--             )
+--     )
+--
+-- NOTE: Suspects
+-- id      name   phone_number    passport_number  license_plate
+-- ------  -----  --------------  ---------------  -------------
+-- 686048  Bruce  (367) 555-5533  5773159633       94KL13X
+-- 514354  Diana  (770) 555-1861  3592750733       322W7JE
+--
+-- NOTE: Number OF the friends OF the Suspects
+-- id      name    phone_number    passport_number  license_plate  caller          receiver
+-- ------  ------  --------------  ---------------  -------------  --------------  --------------
+-- 686048  Bruce   (367) 555-5533  5773159633       94KL13X        (367) 555-5533  (375) 555-8161
+-- 514354  Diana   (770) 555-1861  3592750733       322W7JE        (770) 555-1861  (725) 555-3243
+--
+-- 14. See airports structure, specifically the city
+-- SELECT
+--     *
+-- FROM
+--     airports;
+-- 15. Seek FOR the thief, IS Bruce 356
+-- SELECT
+--     p.name,
+--     ap.city,
+--     f.destination_airport_id
+-- FROM
+--     people AS p
+--     JOIN passengers AS ps ON ps.passport_number = p.passport_number
+--     JOIN flights AS f ON f.id = ps.flight_id
+--     JOIN airports AS ap ON ap.id = f.origin_airport_id
+-- WHERE
+--     p.name = 'Bruce'
+--     OR p.name = 'Diana'
+--     AND f."year" = 2025
+--     AND f."month" = 7
+--     AND f."day" = 29
+--     AND f."hour" <= 12
+-- 15. Look FOR the destionation city 363, New York City
+-- SELECT
+--     *
+-- FROM
+--     airports
+-- WHERE
+--     id = 4;
+-- 16. Look FOR the person who were CALLED BY Bruce 370
+-- SELECT
+--     *
+-- FROM
+--     people
+-- WHERE
+--     phone_number = '(375) 555-8161'
+--     OR phone_number = '(725) 555-3243';
+-- NOTE: Possible accomplices
+-- id      name    phone_number    passport_number  license_plate
+-- ------  ------  --------------  ---------------  -------------
+-- 847116  Philip  (725) 555-3243  3391710505       GW362R6
+-- 864400  Robin   (375) 555-8161                   4V16VO0
+-- 17. Ver que pistas hay segun la segunda interview 414
+-- SELECT
+--     p.*,
+--     bksl.*
+-- FROM
+--     people AS p
+--     JOIN bakery_security_logs AS bksl ON bksl.license_plate = p.license_plate
+-- WHERE
+--     bksl."year" = 2025
+--     AND bksl."month" = 7
+--     AND bksl."day" = 28
+--     AND bksl.license_plate = 'GW362R6'
+--     OR bksl.license_plate = '4V16VO0'
+-- NOTE: Creo que esta pista NO me lleva a ningun lado pero apunta a Robin
+-- 18. Intentar ver quien compro el ticket despues de hablar con Bruce
+-- SELECT
+--     p.name,
+--     atm.transaction_type,
+--     atm."year",
+--     atm.month,
+--     atm."day"
+-- FROM
+--     people AS p
+--     JOIN bank_accounts AS ba ON ba.person_id = p.id
+--     JOIN atm_transactions AS atm ON atm.account_number = ba.account_number
+-- WHERE
+--     atm.transaction_type = 'withdraw'
+--     AND atm."year" = 2025
+--     AND atm."month" = 7
+--     AND atm."day" = 28 -- AND p.name = 'Robin';
+-- 19. VEr si hay viajes para New York City FROM Fiftyville para Philip
+-- SELECT
+--     f.*,
+--     p.name
+-- FROM
+--     flights AS f
+--     JOIN passengers AS ps ON ps.flight_id = f.id
+--     JOIN people AS p ON p.passport_number = ps.passport_number
+-- WHERE
+--     p.passport_number = '3391710505'
+--     AND f."year" = 2025
+--     AND f."month" = 7 -- AND f."day" = 29 -- AND f.destination_airport_id = 4
+-- 20. who was CALLED BY bruce
+SELECT
+    *
+FROM
+    people
+WHERE
+    phone_number IN (
+        SELECT
+            pc.receiver
+        FROM
+            people AS p
+            JOIN phone_calls AS pc ON pc.caller = p.phone_number
+        WHERE
+            p."name" = 'Bruce'
+            AND pc."year" = 2025
+            AND pc."month" = 7
+            AND pc."day" = 28
+            AND pc.duration < 60
+    );
+
+-- NOTE: Robin Is the accomplice
+-- id      name   phone_number    passport_number  license_plate
+-- ------  -----  --------------  ---------------  -------------
+-- 864400  Robin  (375) 555-8161                   4V16VO0
