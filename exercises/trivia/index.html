@@ -1,0 +1,51 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link href="styles.css" rel="stylesheet" />
+    <title>Trivia!</title>
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Trivia!</h1>
+    </div>
+
+    <div class="container">
+      <div class="section">
+        <h2>Part 1: Multiple Choice</h2>
+        <hr />
+        <h3>What is the standard port number used by HTTPS?</h3>
+        <p id="multi-question-feedback" class="hidden">Undefined</p>
+
+        <button id="btn-multi-1" class="btn-multi-answer">80</button>
+        <button id="btn-multi-2" class="btn-multi-answer">443</button>
+        <button id="btn-multi-3" class="btn-multi-answer">8080</button>
+      </div>
+
+      <div class="section">
+        <h2>Part 2: Free Response</h2>
+        <hr />
+        <h3>
+          What protocol is used by browsers to securely request web pages from a
+          server?
+        </h3>
+        <p id="free-question-feedback" class="hidden">Undefined</p>
+
+        <form id="free-question-form">
+          <input
+            id="free-question-input"
+            name="free-question-answer"
+            type="text"
+            autocomplete="off"
+          />
+          <button type="submit">Check Answer</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
