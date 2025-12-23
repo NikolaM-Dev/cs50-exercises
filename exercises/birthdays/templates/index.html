@@ -1,0 +1,71 @@
+{% extends "layout.html" %} {% block main %}
+<section class="section">
+  <h2>Add a Birthday</h2>
+  <form action="/create" method="post">
+    <input
+      type="text"
+      name="name"
+      id="name"
+      placeholder="Name"
+      value="{{ request.form.get('name') }}"
+      autofocus
+      required
+    />
+    <input
+      type="number"
+      name="month"
+      id="month"
+      placeholder="Month"
+      value="{{ request.form.get('month') }}"
+      min="1"
+      max="12"
+      required
+    />
+    <input
+      type="number"
+      name="day"
+      id="day"
+      placeholder="Day"
+      value="{{ request.form.get('day') }}"
+      min="1"
+      max="31"
+      required
+    />
+    <button type="submit">Add Birthday</button>
+    {% for error in errors %}
+      <p class="feedback">{{ error }}</p>
+    {% endfor %}
+  </form>
+</section>
+
+<section class="section">
+  <h2>All Birthdays</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Birthday</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for birthday in birthdays %}
+      <tr>
+        <td>{{ birthday["name"] }}</td>
+        <td>{{ birthday["month"] }}/{{ birthday["day"] }}</td>
+        <td class="table__actions">
+          <!-- Edit Birthday -->
+          <a class="btn--edit" href="/edit/{{ birthday["id"]}}">Edit</a>
+
+          <!-- Delete Birthday -->
+          <form action="/delete/{{ birthday['id']}}" method="post">
+            <button type="submit" class="btn--delete">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock%}

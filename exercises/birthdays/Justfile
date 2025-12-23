@@ -1,0 +1,7 @@
+# List avalible recipes
+default:
+    just --list
+
+# Run `flask` server
+run:
+    uv run flask run

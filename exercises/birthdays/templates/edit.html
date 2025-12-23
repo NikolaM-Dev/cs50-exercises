@@ -1,0 +1,40 @@
+{% extends "layout.html" %} {% block main %}
+<section class="section">
+  <h2>Edit {{ birthday["name"] }} Birthday</h2>
+  <form action="/update/{{ birthday['id'] }}" method="post">
+    <input
+      autofocus
+      id="name"
+      name="name"
+      placeholder="Name"
+      required
+      type="text"
+      value="{{ birthday['name'] }}"
+    />
+    <input
+      id="month"
+      max="12"
+      min="1"
+      name="month"
+      placeholder="Month"
+      required
+      type="number"
+      value="{{ birthday['month'] }}"
+    />
+    <input
+      id="day"
+      max="31"
+      min="1"
+      name="day"
+      placeholder="Day"
+      required
+      type="number"
+      value="{{ birthday['day'] }}"
+    />
+    <button type="submit">Edit Birthday</button>
+    {% for error in errors %}
+      <p class="feedback">{{ error }}</p>
+    {% endfor %}
+  </form>
+</section>
+{% endblock %}
