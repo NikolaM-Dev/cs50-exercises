@@ -1,0 +1,11 @@
+# List avalible recipes
+default:
+    just --list
+
+# Run flask server
+run:
+    uv run flask run
+
+# Hot realoding for fast iteration
+dev:
+    watchexec -e py,html,css,js -- uv run flask run --debug

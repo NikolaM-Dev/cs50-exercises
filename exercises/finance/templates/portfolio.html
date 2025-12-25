@@ -1,0 +1,48 @@
+{% extends "layout.html" %} {% block title %} Portfolio {% endblock %} {% block
+main %}
+<h1>Portfolio</h1>
+<div class="mt-5">
+  <table class="table table-striped text-start">
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Name</th>
+        <th class="text-end">Shares</th>
+        <th class="text-end">Price</th>
+        <th class="text-end">TOTAL</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if portfolio %} {% for stock in portfolio %}
+      <tr>
+        <td>{{ stock['symbol'] }}</td>
+        <td>{{ stock['name'] }}</td>
+        <td class="text-end">{{ stock['shares'] }}</td>
+        <td class="text-end">{{ stock['price'] }}</td>
+        <td class="text-end">{{ stock['total'] }}</td>
+      </tr>
+      {% endfor %} {% else %}
+      <tr>
+        <td>…</td>
+        <td>…</td>
+        <td class="text-end">…</td>
+        <td class="text-end">…</td>
+        <td class="text-end">…</td>
+      </tr>
+      {% endif %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="3"></td>
+        <td class="text-end fw-bold">Cash</td>
+        <td class="text-end">{{ cash }}</td>
+      </tr>
+      <tr>
+        <td colspan="3"></td>
+        <td class="text-end fw-bold">TOTAL</td>
+        <td class="text-end">{{ total }}</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+{% endblock %}

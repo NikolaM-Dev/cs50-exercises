@@ -10,3 +10,6 @@ DAP *
 
 # SQLite3
 *.db
+
+# Note
+.notes.md

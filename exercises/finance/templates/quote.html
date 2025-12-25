@@ -1,0 +1,43 @@
+{% extends "layout.html" %} {% block title %} Quote {% endblock %} {% block main
+%}
+<h1>Search Quote</h1>
+<form class="mt-5" action="/quote" method="post">
+  <div class="mb-3">
+    <input
+      autocomplete="off"
+      autofocus
+      class="form-control mx-auto w-auto"
+      required
+      name="symbol"
+      placeholder="Symbol"
+      type="text"
+    />
+  </div>
+  <button class="btn btn-primary" type="submit">Search</button>
+</form>
+
+{% if quotes %}
+<div class="mt-5">
+  <h2 class="text-start">History</h2>
+  <table class="table table-striped text-start">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Symbol</th>
+        <th>Name</th>
+        <th class="text-end">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for quote in quotes %}
+      <tr>
+        <td>{{ quote['created_at'] }}</td>
+        <td>{{ quote['symbol'] }}</td>
+        <td>{{ quote['name'] }}</td>
+        <td class="text-end">{{ format_price(quote['price']) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %} {% endblock %}
